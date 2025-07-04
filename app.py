@@ -140,7 +140,8 @@ monthly_df = actual_df.groupby("month").agg({
 daily_cases = actual_df["new_cases"].values
 # Ensure create_sequences and build_and_train are properly defined in model.py
 X, y, scaler = create_sequences(daily_cases, time_steps=7)
-model = build_and_train(X, y, epochs=20)
+model = build_and_train(X, y)
+
 
 future_dates = pd.date_range("2025-07-01", "2025-12-31")
 future_preds = []
