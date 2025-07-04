@@ -1,7 +1,8 @@
 import numpy as np
 from sklearn.preprocessing import MinMaxScaler
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import LSTM, Dense
+# from tensorflow.keras.models import Sequential
+# from tensorflow.keras.layers import LSTM, Dense
+from sklearn.linear_model import LinearRegression
 
 def create_sequences(data, time_steps=7):
     scaler = MinMaxScaler()
@@ -12,11 +13,17 @@ def create_sequences(data, time_steps=7):
         y.append(data_scaled[i + time_steps])
     return np.array(X), np.array(y), scaler
 
-def build_and_train(X, y, epochs=10):
-    model = Sequential([
-        LSTM(50, activation='relu', input_shape=(X.shape[1], 1)),
-        Dense(1)
-    ])
-    model.compile(optimizer='adam', loss='mse')
-    model.fit(X, y, epochs=epochs, verbose=0)
+# def build_and_train(X, y, epochs=10):
+#     model = Sequential([
+#         LSTM(50, activation='relu', input_shape=(X.shape[1], 1)),
+#         Dense(1)
+#     ])
+#     model.compile(optimizer='adam', loss='mse')
+#     model.fit(X, y, epochs=epochs, verbose=0)
+#     return model
+
+
+def build_and_train(X, y):
+    model = LinearRegression()
+    model.fit(X, y)
     return model
