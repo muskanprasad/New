@@ -138,8 +138,11 @@ monthly_df = actual_df.groupby("month").agg({
 }).reset_index()
 
 daily_cases = actual_df["new_cases"].values
-# Ensure create_sequences and build_and_train are properly defined in model.py
 X, y, scaler = create_sequences(daily_cases, time_steps=7)
+
+# 🔧 Flatten X from (samples, time_steps, 1) → (samples, time_steps)
+X = X.reshape(X.shape[0], -1)
+
 model = build_and_train(X, y)
 
 
