@@ -145,13 +145,14 @@ model = build_and_train(X, y)
 
 future_dates = pd.date_range("2025-07-01", "2025-12-31")
 future_preds = []
-last_seq = daily_cases[-7:] # Get last 7 days for initial prediction input
+last_seq = daily_cases[-7:]  # Get last 7 days
+
 for _ in range(len(future_dates)):
-    seq_scaled = scaler.transform(np.array(last_seq).reshape(-1, 1)).reshape(1, 7, 1)
-    pred_scaled = model.predict(seq_scaled)
-    pred = scaler.inverse_transform(pred_scaled)[0][0] # Inverse transform to get actual case count
+    seq_scaled = scaler.transform(np.array(last_seq).reshape(-1, 1)).reshape(1, -1)  # Shape (1, 7)
+    pred_scaled = model.predict(seq_scaled).reshape(-1, 1)  # Ensure it's 2D
+    pred = scaler.inverse_transform(pred_scaled)[0][0]
     future_preds.append(pred)
-    last_seq = np.append(last_seq[1:], pred) # Update sequence for next prediction
+    last_seq = np.append(last_seq[1:], pred)  # Slide window
 
 pred_df = pd.DataFrame({
     "Date": future_dates,
